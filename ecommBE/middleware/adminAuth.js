@@ -3,13 +3,15 @@ import jwt from "jsonwebtoken";
 export default async function adminAuth(req,res,next) {
     try {
         const { token } = req.headers;
+        
         if (!token) {
             return res.json({
                 status: false,
-                message: 'Unauthorized admin'
+                message: 'Unauthorized admin token not found'
             })
         }
         const decoded = jwt.verify(token,process.env.JWT_SECRET);
+        
         if (decoded !== process.env.ADMIN_EMAIL + process.env.ADMIN_PASSWORD) {
             return res.json({
                 status: false,

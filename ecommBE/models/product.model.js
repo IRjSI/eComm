@@ -34,7 +34,7 @@ const ProductSchema = new mongoose.Schema({
     },
     date: {
         type: Number,
-        required: true
+        required: false
     }
 })
 
