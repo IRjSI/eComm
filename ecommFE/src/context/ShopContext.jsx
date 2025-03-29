@@ -13,6 +13,7 @@ export default function ShopContextProvider({children}) {
     const [showSearch,setShowSearch] = useState(false);
     const [cartItems, setCartItems] = useState({});
     const [products, setProducts] = useState([]);
+    const [token, setToken] = useState('');
     const navigate = useNavigate();
 
     const addToCart = async (itemId, size) => {
@@ -35,7 +36,17 @@ export default function ShopContextProvider({children}) {
             cartData[itemId][size] = 1;
         }
 
-        setCartItems(cartData);        
+        setCartItems(cartData);
+        
+        if (token) {
+            try {
+                const response = await axios.post(`${backendUrl}/api/cart/add`, { itemId, size }, {
+                    headers: { token }
+                });
+            } catch (error) {
+                
+            }
+        }
     }
 
     const getCartCount = () => {
@@ -80,7 +91,9 @@ export default function ShopContextProvider({children}) {
 
     const getProducts = async () => {
         try {
-            const response = await axios.get(`${backendUrl}/api/product/list`);
+            const response = await axios.get(`${backendUrl}/api/product/list`, { 
+                headers: { token }
+            });
             if (response.data.status) {
                 setProducts(response.data.data);
             } else {
@@ -92,9 +105,9 @@ export default function ShopContextProvider({children}) {
         }
     }
 
-    useEffect(() => {
-        getProducts()
-    }, [])
+    // useEffect(() => {
+    //     getProducts()
+    // }, [])
 
     const contextValue = {
         products,
@@ -110,7 +123,9 @@ export default function ShopContextProvider({children}) {
         updateQuantity,
         getCartAmount,
         navigate,
-        backendUrl
+        backendUrl,
+        token,
+        setToken
     }
 
     return (

@@ -2,4 +2,4 @@ ecommBE/.env
 node_modules
 .gitignore
 admin/.env
-ecommFE/src/.env
+ecommFE/.env

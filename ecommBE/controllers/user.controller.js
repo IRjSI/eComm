@@ -12,17 +12,18 @@ const loginUser = async (req,res) => {
                 status: false,
                 message: 'User not found'
             })
-        }
+        }        
+        
+        const isMatch = await bcrypt.compare(password, user.password);
 
-        const isMatch = bcrypt.compare(password, user.password);
         if (!isMatch) {
             return res.json({
                 status: false,
                 message: 'Invalid credentials'
             })
         }
-
-        const token = jwt.sign(user._id, process.env.JWT_SECRET);
+        
+        const token = jwt.sign({userId: user._id}, process.env.JWT_SECRET);
        
         res.json({
             status: true,
@@ -31,7 +32,7 @@ const loginUser = async (req,res) => {
     } catch (error) {
         console.log(error);
         res.json({
-            status: true,
+            status: false,
             message: 'Error loging-in'
         })
     }
@@ -41,7 +42,7 @@ const registerUser = async (req,res) => {
     try {
         const { email,name,password } = req.body;
         const existingUser = await UserModel.findOne({ email });
-        if (existingUser) {
+        if (existingUser) {            
             return res.json({
                 status: false,
                 message: 'User already exists'
@@ -62,14 +63,14 @@ const registerUser = async (req,res) => {
         }
 
         const hashedPassword = await bcrypt.hash(password,10);
-
+        
         const newUser = await UserModel.create({
             name,
             email,
             password: hashedPassword
         })
 
-        const token = jwt.sign(newUser._id,process.env.JWT_SECRET);
+        const token = jwt.sign({userId: newUser._id},process.env.JWT_SECRET);
 
         res.json({
             status: true,

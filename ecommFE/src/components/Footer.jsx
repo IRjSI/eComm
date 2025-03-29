@@ -1,9 +1,15 @@
 import React from 'react'
 import { assets } from '../assets/assets'
+import { motion } from 'framer-motion'
 
 function Footer() {
   return (
-    <div>
+    <motion.div 
+    initial={{ opacity: 0, y: 50 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true, amount: 0.2 }}
+    transition={{ duration: 0.6, ease: "easeOut" }}
+    className="w-full py-16">
         <div className='flex flex-col sm:grid grid-cols-[3fr_1fr_1fr] gap-14 my-10 mt-40 text-sm'>
             <div className=''>
                 <img src={assets.logo} className='w-32 mb-5' alt="" />
@@ -33,7 +39,7 @@ function Footer() {
             <hr />
             <p className='py-5 text-center text-sm'>Copyright 2025@forever.com - All Rights Reserved</p>
         </div>
-    </div>
+    </motion.div>
   )
 }
 
